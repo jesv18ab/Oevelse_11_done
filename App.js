@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, Button,LogBox } from 'react-native';
+import { Text, View, StyleSheet, Button } from 'react-native';
 import Constants from 'expo-constants';
 import {
   AdMobBanner,
@@ -9,44 +9,36 @@ import {
     AdMob
 } from 'expo-ads-admob'
 
-LogBox.ignoreAllLogs(false)
+const adUnitID ="ca-app-pub-3940256099942544/6300978111";
 
 export default class App extends React.Component {
-    componentDidMount() {
-        this.setTestID
-    }
-
-    setTestID = () => {
-         setTestDeviceIDAsync('EMULATOR');
-    }
-
-    getAdId = () =>{
-        const adUnitID = Platform.select({
-            // https://developers.google.com/admob/ios/test-ads
-            ios: 'ca-app-pub-3940256099942544/1712485313',
-            // https://developers.google.com/admob/android/test-ads
-            android: 'ca-app-pub-3940256099942544/5224354917',
-        });
-        return adUnitID
-    }
 
 
     showInterstitialAd = async () => {
-        await AdMobInterstitial.setAdUnitID('ca-app-pub-3940256099942544/1033173712'); // Test ID, Replace with your-admob-unit-id
-        await AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true});
-        await AdMobInterstitial.showAdAsync();
+       try {
+           await AdMobInterstitial.setAdUnitID('ca-app-pub-3940256099942544/1033173712'); // Test ID, Replace with your-admob-unit-id
+           await AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true});
+           await AdMobInterstitial.showAdAsync();
+       }catch (e) {
+           console.log(e.message)
+       }
   };
+
 /**/
   showRewardedAd = async () => {
     AdMobRewarded.setAdUnitID('ca-app-pub-3940256099942544/5224354917'); // Test ID, Replace with your-admob-unit-id
-    await AdMobRewarded.requestAdAsync();
-    await AdMobRewarded.showAdAsync();
+    try {
+        await AdMobRewarded.requestAdAsync({servePersonalizedAds: true});
+        await AdMobRewarded.showAdAsync();
+    }catch (e) {
+        console.log(e.message)
+    }
   };
 
   render() {
     return (
         <View style={styles.container}>
-          <Text style={styles.paragraph}>Device ID: {Constants.deviceId}</Text>
+          <Text style={styles.paragraph}>Device name: {Constants.deviceName}</Text>
           <Button
               onPress={this.showInterstitialAd}
               title="Interstitial ad"
@@ -58,17 +50,14 @@ export default class App extends React.Component {
           <Text>AdMobBanner</Text>
           <AdMobBanner
               bannerSize="fullBanner"
-              adUnitID="ca-app-pub-3940256099942544/6300978111" // Test ID, Replace with your-admob-unit-id
+              adUnitID={adUnitID} // Test ID, Replace with your-admob-unit-id
               servePersonalizedAds // true or false
-              onDidFailToReceiveAdWithError={this.bannerError}
           />
           <Text>PublisherBanner</Text>
 
           <PublisherBanner
               bannerSize="fullBanner"
-              adUnitID="ca-app-pub-3940256099942544/6300978111" // Test ID, Replace with your-admob-unit-id
-              onDidFailToReceiveAdWithError={this.bannerError}
-              onAdMobDispatchAppEvent={this.adMobEvent}
+              adUnitID={adUnitID} // Test ID, Replace with your-admob-unit-id
           />
         </View>
     );
