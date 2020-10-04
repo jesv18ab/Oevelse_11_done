@@ -53,7 +53,7 @@ export default class App extends React.Component {
               adUnitID={adUnitID} // Test ID, Replace with your-admob-unit-id
               servePersonalizedAds // true or false
           />
-          <Text>PublisherBanner </Text>
+          <Text>PublisherBanner</Text>
 
           <PublisherBanner
               bannerSize="fullBanner"
